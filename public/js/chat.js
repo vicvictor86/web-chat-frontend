@@ -50,5 +50,5 @@ function createMessage(data) {
 }
 
 document.getElementById("logout").addEventListener("click", () => {
-  window.location.href = "index.html";
+  window.location.href = "../index.html";
 });
