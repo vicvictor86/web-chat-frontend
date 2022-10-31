@@ -9,7 +9,8 @@ usernameDiv.innerHTML = `Olá ${username} - você está na sala ${room}`;
 
 socket.emit('select_room', {
   username,
-  room
+  room,
+  connectionMessage: " entrou na sala",
 }, messages => {
   messages.forEach(message => {
     createMessage(message);
@@ -18,11 +19,11 @@ socket.emit('select_room', {
 
 document.getElementById("message_input").addEventListener("keypress", event => {
   if (event.key === "Enter") {
-    const message = event.target.value;
+    const text = event.target.value;
 
     const data = {
       room,
-      message,
+      text,
       username
     };
 
@@ -50,5 +51,6 @@ function createMessage(data) {
 }
 
 document.getElementById("logout").addEventListener("click", () => {
-  window.location.href = "../index.html";
+  socket.emit('logout', {username, room, connectionMessage: " saiu da sala"});
+  window.location.href = "./select-room.html";
 });
