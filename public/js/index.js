@@ -27,7 +27,7 @@ form.addEventListener("submit", event => {
         alert(data.message);
       } else {
         window.localStorage.setItem("token", data.token);
-        window.localStorage.setItem("id", data.user.id);
+        window.localStorage.setItem("user_id", data.user.id);
         window.location.href = `pages/select-room.html`;
       }
     })

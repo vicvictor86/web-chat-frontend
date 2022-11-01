@@ -1,19 +1,19 @@
 const socket = io("http://localhost:3333");
 
 const urlSearch = new URLSearchParams(window.location.search);
-const username = urlSearch.get('username');
 const room = urlSearch.get('select_room');
 
 const usernameDiv = document.getElementById("username");
-usernameDiv.innerHTML = `Olá ${username} - você está na sala ${room}`;
 
 socket.emit('select_room', {
-  username,
-  user_id: window.localStorage.getItem("id"),
+  user_id: window.localStorage.getItem("user_id"),
   roomName: room,
   connectionMessage: " entrou na sala",
-}, messages => {
-  messages.forEach(message => {
+}, data => {
+  usernameDiv.innerHTML = `Olá ${data.username} - você está na sala ${room}`;
+  window.localStorage.setItem("room_id", data.room_id);
+
+  data.messages.forEach(message => {
     createMessage(message);
   });
 });
@@ -23,9 +23,9 @@ document.getElementById("message_input").addEventListener("keypress", event => {
     const text = event.target.value;
 
     const data = {
-      room,
+      user_id: window.localStorage.getItem("user_id"),
       text,
-      username
+      roomName: room,
     };
 
     socket.emit('message', data);
@@ -56,6 +56,10 @@ function createMessage(data) {
 }
 
 document.getElementById("logout").addEventListener("click", () => {
-  socket.emit('logout', {username, room, connectionMessage: " saiu da sala"});
+  const user_id = window.localStorage.getItem("user_id");
+  const room_id = window.localStorage.getItem("room_id");
+  const connectionMessage = " saiu da sala";
+
+  socket.emit('disconnect_room', {user_id, room_id, connectionMessage });
   window.location.href = "./select-room.html";
 });
