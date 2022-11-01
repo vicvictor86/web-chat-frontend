@@ -1,9 +1,8 @@
-const endPoint = "http://localhost:3333/login/";
+const endPoint = "http://localhost:3333/user/";
 
 const form = document.getElementById("create-user");
 
 form.addEventListener("submit", event => {
-  console.log("AAAA")
   event.preventDefault();
 
   const email = document.getElementById("email").value;
@@ -25,10 +24,10 @@ form.addEventListener("submit", event => {
   })
     .then(response => response.json())
     .then(data => {
-      if (data.error) {
-        alert(data.error);
+      if (data.status === "error") {
+        alert(data.message);
       } else {
-        window.location.href = `./select-room.html?username=${data.username}`;
+        window.location.href = `./select-room.html`;
       }
     })
     .catch(error => {

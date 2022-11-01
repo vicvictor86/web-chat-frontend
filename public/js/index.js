@@ -22,10 +22,13 @@ form.addEventListener("submit", event => {
   })
     .then(response => response.json())
     .then(data => {
-      if (data.error) {
-        alert(data.error);
+      console.log(data);
+      if (data.status === "error") {
+        alert(data.message);
       } else {
-        window.location.href = `./select-room.html?username=${data.username}`;
+        window.localStorage.setItem("token", data.token);
+        window.localStorage.setItem("id", data.user.id);
+        window.location.href = `pages/select-room.html`;
       }
     })
     .catch(error => {

@@ -9,6 +9,7 @@ usernameDiv.innerHTML = `Olá ${username} - você está na sala ${room}`;
 
 socket.emit('select_room', {
   username,
+  user_id: window.localStorage.getItem("id"),
   room,
   connectionMessage: " entrou na sala",
 }, messages => {
