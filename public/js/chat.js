@@ -10,7 +10,7 @@ usernameDiv.innerHTML = `Olá ${username} - você está na sala ${room}`;
 socket.emit('select_room', {
   username,
   user_id: window.localStorage.getItem("id"),
-  room,
+  roomName: room,
   connectionMessage: " entrou na sala",
 }, messages => {
   messages.forEach(message => {
@@ -37,6 +37,10 @@ document.getElementById("message_input").addEventListener("keypress", event => {
 socket.on('message', data => {
   createMessage(data);
 });
+
+socket.on('app_error', data => {
+  alert(data.message);
+})
 
 function createMessage(data) {
   const messageDiv = document.getElementById("messages");
