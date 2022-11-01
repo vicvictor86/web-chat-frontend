@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <title>Selecione uma sala</title>
+  </head>
+  <body>
+    <form id="join_room" action="./chat.html">
+      <div class="container">
+        <div class="row">
+          <select name="select_room" id="select_room" required>
+            <option value="">Selecione a sala</option>
+            <option value="Node">Node</option>
+            <option value="Java">Java</option>
+            <option value="ReactJS">ReactJS</option>
+            <option value="Elixir">Elixir</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <button type="submit" class="btn btn-primary mb-3">Entrar</button>
+        </div>
+
+        <div class="row">
+          <button onclick="window.location.href='/index.html'" type="button" class="btn btn-primary mb-3">Sair</button>
+        </div>
+      </div>
+    </form>
+  </body>
+</html>
