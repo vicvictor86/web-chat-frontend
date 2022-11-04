@@ -42,6 +42,15 @@ input {
   outline: none;
 }
 
+.online-users {
+  display: flex;
+
+  margin: 10px;
+  padding: 5px;
+
+  margin-top: 140px;
+}
+
 .row {
   display: flex;
   justify-content: center;
