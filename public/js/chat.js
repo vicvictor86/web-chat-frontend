@@ -42,6 +42,14 @@ document.getElementById("message_input").addEventListener("keypress", event => {
   }
 });
 
+socket.on("new_user_connected", data => {
+  getOnlineUsers();
+});
+
+socket.on("user_disconnected", data => {
+  getOnlineUsers();
+})
+
 socket.on('message', data => {
   createMessage(data);
 });
@@ -50,17 +58,17 @@ socket.on('app_error', data => {
   alert(data.message);
 })
 
-function getOnlineUsers(){
+function getOnlineUsers() {
   socket.emit("connections_room", {
     room_id: window.localStorage.getItem("room_id"),
   }, data => {
     const onlineUsers = [];
     data.connections.forEach(connection => {
-      if(connection.is_on_chat) {
+      if (connection.is_on_chat) {
         onlineUsers.push(connection.user);
       }
-    })
-  
+    });
+
     createHtmlOnlineUsers(onlineUsers);
   });
 }
@@ -80,6 +88,7 @@ function createMessage(data) {
 
 function createHtmlOnlineUsers(usersInCurrentRoom) {
   const onlineUsers = document.getElementById("online-users");
+  onlineUsers.innerHTML = "";
   usersInCurrentRoom.forEach(user => {
     onlineUsers.innerHTML += `
     <div class="new_message">
@@ -91,9 +100,9 @@ function createHtmlOnlineUsers(usersInCurrentRoom) {
   });
 }
 
-function createConnectionMessage(connection){
+function createConnectionMessage(connection) {
   console.log(connection);
-  if(!connection.is_on_chat){
+  if (!connection.is_on_chat) {
     const dataToBack = {
       user_id: window.localStorage.getItem("user_id"),
       roomName: room,
@@ -104,15 +113,15 @@ function createConnectionMessage(connection){
   }
 }
 
-function disconnectFromRoom(){
+function disconnectFromRoom() {
   const user_id = window.localStorage.getItem("user_id");
   const room_id = window.localStorage.getItem("room_id");
   const connectionMessage = " saiu da sala";
 
-  socket.emit('disconnect_room', {user_id, room_id, connectionMessage });
+  socket.emit('disconnect_room', { user_id, room_id, connectionMessage });
 }
 
-function createWelcomeMessage(data){
+function createWelcomeMessage(data) {
   usernameDiv.innerHTML = `Olá ${data.username} - você está na sala ${room}`;
 }
 
