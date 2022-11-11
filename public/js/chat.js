@@ -21,16 +21,9 @@ socket.emit('select_room', {
   getOnlineUsers();
 
   createConnectionMessage(data);
-});
 
-socket.emit('previous_messages', {
-  user_id: window.localStorage.getItem("user_id"),
-  roomName: room,
-}, data => {
-  data.messages.forEach(message => {
-    createMessage(message);
-  });
-})
+  getPreviousMessages();
+});
 
 document.getElementById("message_input").addEventListener("keypress", event => {
   if (event.key === "Enter") {
@@ -62,7 +55,22 @@ socket.on('message', data => {
 
 socket.on('app_error', data => {
   alert(data.message);
+
+  if(data.code === 404) {
+    window.location.href = "/pages/select-room.html";
+  }
 })
+
+function getPreviousMessages(){
+  socket.emit('previous_messages', {
+    user_id: window.localStorage.getItem("user_id"),
+    roomName: room,
+  }, data => {
+    data.messages.forEach(message => {
+      createMessage(message);
+    });
+  });
+}
 
 function roomLinkToClipboard(){
   const linkToClipboard = "http://localhost:3000/pages/chat.html?select_room=" + room;
