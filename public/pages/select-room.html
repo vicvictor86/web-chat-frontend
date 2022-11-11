@@ -11,12 +11,8 @@
     <form id="join_room" action="./chat.html">
       <div class="container">
         <div class="row">
-          <select name="select_room" id="select_room" required>
+          <select name="select_room" id="select-room" required>
             <option value="">Selecione a sala</option>
-            <option value="Node">Node</option>
-            <option value="Java">Java</option>
-            <option value="ReactJS">ReactJS</option>
-            <option value="Elixir">Elixir</option>
           </select>
         </div>
 
@@ -25,9 +21,14 @@
         </div>
 
         <div class="row">
+          <button onclick="window.location.href='/pages/create-room.html'" type="button" class="btn btn-primary mb-3">Criar sala</button>
+        </div>
+
+        <div class="row">
           <button onclick="window.location.href='/index.html'" type="button" class="btn btn-primary mb-3">Sair</button>
         </div>
       </div>
     </form>
   </body>
+  <script src="../js/select-room.js"></script>
 </html>
