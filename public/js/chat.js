@@ -13,22 +13,9 @@ socket.emit('select_room', {
   createWelcomeMessage(data);
 
   getOnlineUsers();
-});
 
-function getOnlineUsers(){
-  socket.emit("connections_room", {
-    room_id: window.localStorage.getItem("room_id"),
-  }, data => {
-    const onlineUsers = [];
-    data.connections.forEach(connection => {
-      if(connection.is_on_chat) {
-        onlineUsers.push(connection.user);
-      }
-    })
-  
-    createHtmlOnlineUsers(onlineUsers);
-  });
-}
+  createConnectionMessage(data);
+});
 
 socket.emit('previous_messages', {
   user_id: window.localStorage.getItem("user_id"),
@@ -38,14 +25,6 @@ socket.emit('previous_messages', {
     createMessage(message);
   });
 })
-
-socket.emit("connections_room", {
-  user_id: window.localStorage.getItem("user_id"),
-  room_id: window.localStorage.getItem("room_id"),
-}, data => {
-  const userInRoom = data[0];
-  createConnectionMessage(userInRoom);
-});
 
 document.getElementById("message_input").addEventListener("keypress", event => {
   if (event.key === "Enter") {
@@ -70,6 +49,21 @@ socket.on('message', data => {
 socket.on('app_error', data => {
   alert(data.message);
 })
+
+function getOnlineUsers(){
+  socket.emit("connections_room", {
+    room_id: window.localStorage.getItem("room_id"),
+  }, data => {
+    const onlineUsers = [];
+    data.connections.forEach(connection => {
+      if(connection.is_on_chat) {
+        onlineUsers.push(connection.user);
+      }
+    })
+  
+    createHtmlOnlineUsers(onlineUsers);
+  });
+}
 
 function createMessage(data) {
   const messageDiv = document.getElementById("messages");
@@ -97,9 +91,9 @@ function createHtmlOnlineUsers(usersInCurrentRoom) {
   });
 }
 
-function createConnectionMessage(userInRoom){
-  console.log(userInRoom);
-  if(!userInRoom.is_on_chat){
+function createConnectionMessage(connection){
+  console.log(connection);
+  if(!connection.is_on_chat){
     const dataToBack = {
       user_id: window.localStorage.getItem("user_id"),
       roomName: room,
