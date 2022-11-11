@@ -1,7 +1,13 @@
-const socket = io("http://localhost:3333");
-
+const userId = window.localStorage.getItem("user_id");
 const urlSearch = new URLSearchParams(window.location.search);
 const room = urlSearch.get('select_room');
+
+if(!userId) {
+  window.sessionStorage.setItem("roomToRedirect", room);
+  window.location.href = "/index.html";
+}
+
+const socket = io("http://localhost:3333");
 
 const usernameDiv = document.getElementById("username");
 
@@ -57,6 +63,14 @@ socket.on('message', data => {
 socket.on('app_error', data => {
   alert(data.message);
 })
+
+function roomLinkToClipboard(){
+  const linkToClipboard = "http://localhost:3000/pages/chat.html?select_room=" + room;
+
+  navigator.clipboard.writeText(linkToClipboard).then(function() {
+    alert("Link da sala copiado com sucesso!");
+  });
+}
 
 function getOnlineUsers() {
   socket.emit("connections_room", {

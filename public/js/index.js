@@ -28,7 +28,14 @@ form.addEventListener("submit", event => {
       } else {
         window.localStorage.setItem("token", data.token);
         window.localStorage.setItem("user_id", data.user.id);
-        window.location.href = `pages/select-room.html`;
+        
+        console.log(window.sessionStorage.getItem("roomToRedirect"));
+        if(window.sessionStorage.roomToRedirect) {
+          window.location.href = `pages/chat.html?select_room=${window.sessionStorage.roomToRedirect}`;  
+          window.sessionStorage.removeItem("roomToRedirect");
+        } else {
+          window.location.href = `pages/select-room.html`;
+        }
       }
     })
     .catch(error => {
