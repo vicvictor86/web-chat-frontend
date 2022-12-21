@@ -14,7 +14,7 @@ fetch(endPoint + user_id, {
   .then(rooms => {
     rooms.forEach(room => {
       const option = document.createElement("option");
-      option.value = room.name;
+      option.value = room.id;
       option.innerHTML = room.name;
       selectRoom.appendChild(option);
     });
