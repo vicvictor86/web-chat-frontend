@@ -7,10 +7,12 @@ form.addEventListener("submit", event => {
 
   const name = document.getElementById("room-input").value;
   const user_limit = document.getElementById("limit-input").value;
+  const password = document.getElementById("room-password-input").value;
 
   const data = {
     name,
-    user_limit
+    user_limit,
+    password,
   };
 
   fetch(endPoint, {
@@ -22,11 +24,11 @@ form.addEventListener("submit", event => {
     body: JSON.stringify(data)
   })
     .then(response => response.json())
-    .then(data => {
-      if (data.status === "error") {
-        alert(data.message);
+    .then(room => {
+      if (room.status === "error") {
+        alert(room.message);
       } else {
-        window.location.href = `./select-room.html`;
+        window.location.href = `./chat.html?select_room=${room.id}`;
       }
     })
     .catch(error => {

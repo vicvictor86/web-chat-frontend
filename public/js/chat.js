@@ -17,7 +17,6 @@ socket.emit('select_room', {
   user_id: window.localStorage.getItem("user_id"),
   room_id: roomId,
 }, data => {
-  console.log(data)
   room = data.room;
   window.localStorage.setItem("room_id", data.room.id);
   createWelcomeMessage(data);
@@ -127,7 +126,6 @@ function createHtmlOnlineUsers(usersInCurrentRoom) {
 }
 
 function createConnectionMessage(connection) {
-  console.log(connection);
   if (!connection.is_on_chat) {
     const dataToBack = {
       user_id: window.localStorage.getItem("user_id"),
