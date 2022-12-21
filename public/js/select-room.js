@@ -1,12 +1,14 @@
 const endPoint = "http://localhost:3333/rooms/";
 
 const selectRoom = document.getElementById("select-room");
+const user_id = window.localStorage.getItem("user_id");
 
-fetch(endPoint, {
+fetch(endPoint + user_id, {
   method: "GET",
   headers: {
     "Content-Type": "application/json"
-  }
+  },
+  
 })
   .then(response => response.json())
   .then(rooms => {
