@@ -2,7 +2,7 @@ const userId = window.localStorage.getItem("user_id");
 const urlSearch = new URLSearchParams(window.location.search);
 const roomId = urlSearch.get('select_room');
 
-if(!userId) {
+if (!userId) {
   window.sessionStorage.setItem("roomToRedirect", roomId);
   window.location.href = "/index.html";
 }
@@ -46,10 +46,12 @@ document.getElementById("message_input").addEventListener("keypress", event => {
 
 socket.on("new_user_connected", data => {
   getOnlineUsers();
+  getParticipants();
 });
 
 socket.on("user_disconnected", data => {
   getOnlineUsers();
+  getParticipants();
 })
 
 socket.on('message', data => {
@@ -59,12 +61,17 @@ socket.on('message', data => {
 socket.on('app_error', data => {
   alert(data.message);
 
-  if(data.code === 404) {
+  if (data.code === 404) {
     window.location.href = "/pages/select-room.html";
   }
 })
 
-function getPreviousMessages(){
+socket.on('kicked', data => {
+  alert("Você foi expulso da sala!");
+  window.location.href = "/pages/select-room.html";
+})
+
+function getPreviousMessages() {
   socket.emit('previous_messages', {
     user_id: window.localStorage.getItem("user_id"),
     roomName: room.name,
@@ -75,10 +82,10 @@ function getPreviousMessages(){
   });
 }
 
-function roomLinkToClipboard(){
+function roomLinkToClipboard() {
   const linkToClipboard = "http://localhost:3000/pages/chat.html?select_room=" + room.id;
 
-  navigator.clipboard.writeText(linkToClipboard).then(function() {
+  navigator.clipboard.writeText(linkToClipboard).then(function () {
     alert("Link da sala copiado com sucesso!");
   });
 }
@@ -95,6 +102,19 @@ function getOnlineUsers() {
     });
 
     createHtmlOnlineUsers(onlineUsers);
+  });
+}
+
+function getParticipants() {
+  socket.emit("connections_room", {
+    room_id: window.localStorage.getItem("room_id"),
+  }, data => {
+    const participants = [];
+    data.connections.forEach(connection => {
+      participants.push(connection.user);
+    });
+
+    createHtmlParticipants(participants);
   });
 }
 
@@ -116,11 +136,22 @@ function createHtmlOnlineUsers(usersInCurrentRoom) {
   onlineUsers.innerHTML = "";
   usersInCurrentRoom.forEach(user => {
     onlineUsers.innerHTML += `
-    <div class="new_message">
-    <label class="form-label">
+    <li class="form-label">
       <strong> ${user.username} </strong>
-    </label>
-    </d;
+    </li>
+  `;
+  });
+}
+
+function createHtmlParticipants(participantsInCurrentRoom) {
+  const participants = document.getElementById("participants");
+  participants.innerHTML = "";
+  participantsInCurrentRoom.forEach(user => {
+    participants.innerHTML += `
+    <li>
+      <strong> ${user.username} </strong>
+      <button class="btn kick-button" onClick="kickUser('${user.id}')"> Expulsar </button>
+    </li>
   `;
   });
 }
@@ -147,6 +178,26 @@ function disconnectFromRoom() {
 
 function createWelcomeMessage(data) {
   usernameDiv.innerHTML = `Olá ${data.username} - você está na sala ${room.name}`;
+}
+
+function changeRoomName(data) {
+
+}
+
+function kickUser(userToKickId) {
+  const user_id = window.localStorage.getItem("user_id");
+  const room_id = window.localStorage.getItem("room_id");
+
+  socket.emit('kick_user', { user_id, room_id, userToKickId }, data => {
+    alert(`${data} foi expulso da sala com sucesso!`);
+    getParticipants();
+    getOnlineUsers();
+  });
+}
+
+function kicked() {
+  alert("Você foi expulso da sala!");
+  window.location.href = "/pages/select-room.html";
 }
 
 document.getElementById("logout").addEventListener("click", () => {
