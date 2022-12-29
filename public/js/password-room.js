@@ -1,21 +1,20 @@
 const endPoint = "http://localhost:3333/rooms/";
 
-const form = document.getElementById("create-room");
+const urlSearch = new URLSearchParams(window.location.search);
+const form = document.getElementById("password-room");
 
 form.addEventListener("submit", event => {
   event.preventDefault();
 
-  const name = document.getElementById("room-input").value;
-  const user_limit = document.getElementById("limit-input").value;
-  const password = document.getElementById("room-password-input").value;
+  const roomId = urlSearch.get('select_room');
+  const password = document.getElementById("password").value;
 
   const data = {
-    name,
-    user_limit,
+    roomId,
     password,
-  };
-
-  fetch(endPoint, {
+  }
+  
+  fetch(endPoint + "private/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,6 +24,7 @@ form.addEventListener("submit", event => {
   })
     .then(response => response.json())
     .then(room => {
+      console.log(room)
       if (room.status === "error") {
         alert(room.message);
       } else {
@@ -34,4 +34,5 @@ form.addEventListener("submit", event => {
     .catch(error => {
       console.log(error);
     });
+  
 });

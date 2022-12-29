@@ -1,3 +1,5 @@
+import { authenticateUser } from "./authentication.js";
+
 const endPoint = "http://localhost:3333/user/";
 
 const form = document.getElementById("create-user");
@@ -27,8 +29,10 @@ form.addEventListener("submit", event => {
       if (data.status === "error") {
         alert(data.message);
       } else {
+        authenticateUser({username, password});
         window.location.href = `./select-room.html`;
       }
+      
     })
     .catch(error => {
       console.log(error);

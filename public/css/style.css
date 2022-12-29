@@ -28,6 +28,13 @@ button {
   cursor: pointer;
 }
 
+.kick-button {
+  background: #971a1a;
+  width: 100px;
+  height: 30px;
+  margin-left: 10px;
+}
+
 button:hover {
   opacity: 0.8;
 }
