@@ -14,7 +14,32 @@
       </div>
 
       <div class="shared-button">
-        <button onclick="changeRoomName()" class="btn btn-primary mb-3">Alterar nome da sala</button>
+        <button class="delete-button" onclick="updateRoom()" class="btn btn-primary mb-3">Alterar informações da sala</button>
+
+        <dialog>
+          <form class="form-popup" method="dialog">
+            <label>
+              <span>Nome da sala</span>
+              <input class="field-update-room" type="text" id="room-name" />
+            </label>
+            <label>
+              <span>Limite de usuários</span>
+              <input class="field-update-room" type="number" id="room-limit" />
+            </label>
+            <label>
+              <span>Senha da sala</span>
+              <input class="field-update-room" type="password" id="room-password" />
+            </label>
+            <menu>
+              <button id="update-room" class="button-update-room" type="submit" value="default">Alterar</button>
+              <button id="close-modal" class="button-update-room" type="reset" value="cancel">Cancelar</button>
+            </menu>
+          </form>
+        </dialog>
+      </div>
+
+      <div class="shared-button">
+        <button class="delete-button" onclick="deleteRoom()" class="btn btn-primary mb-3">Deletar a sala</button>
       </div>
 
       <div class="online-users">

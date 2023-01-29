@@ -19,7 +19,8 @@ socket.emit('select_room', {
 }, data => {
   room = data.room;
   window.localStorage.setItem("room_id", data.room.id);
-  createWelcomeMessage(data);
+  window.localStorage.setItem("username", data.username);
+  createWelcomeMessage();
 
   getOnlineUsers();
 
@@ -70,6 +71,20 @@ socket.on('kicked', data => {
   alert("Você foi expulso da sala!");
   window.location.href = "/pages/select-room.html";
 })
+
+socket.on('room_deleted', data => {
+  alert("A sala foi deletada!");
+  window.location.href = "/pages/select-room.html";
+});
+
+socket.on('room_updated', data => {
+  if (!data.isSamePassword) {
+    window.location.href = `./password-room.html?select_room=${room.id}`;
+  } else {
+    room = data.room;
+    createWelcomeMessage();
+  }
+});
 
 function getPreviousMessages() {
   socket.emit('previous_messages', {
@@ -168,20 +183,38 @@ function createConnectionMessage(connection) {
   }
 }
 
-function disconnectFromRoom() {
-  const user_id = window.localStorage.getItem("user_id");
-  const room_id = window.localStorage.getItem("room_id");
-  const connectionMessage = " saiu da sala";
-
-  socket.emit('disconnect_room', { user_id, room_id, connectionMessage });
+function createWelcomeMessage() {
+  const username = window.localStorage.getItem("username"); 
+  usernameDiv.innerHTML = `Olá ${username} - você está na sala ${room.name}`;
 }
 
-function createWelcomeMessage(data) {
-  usernameDiv.innerHTML = `Olá ${data.username} - você está na sala ${room.name}`;
-}
 
-function changeRoomName(data) {
+function updateRoom(data) {
+  const modal = document.querySelector("dialog");
 
+  modal.showModal();
+
+  const closeModal = document.getElementById("close-modal");
+  closeModal.addEventListener("click", () => {
+    modal.close();
+  });
+
+  const updateRoom = document.getElementById("update-room");
+  updateRoom.addEventListener("click", () => {
+    const newRoomName = document.getElementById("room-name").value;
+    const newRoomUserLimit = document.getElementById("room-limit").value;
+    const newRoomPassword = document.getElementById("room-password").value;
+
+    const data = {
+      user_id: window.localStorage.getItem("user_id"),
+      room_id: window.localStorage.getItem("room_id"),
+      newRoomName,
+      newRoomUserLimit,
+      newRoomPassword,
+    }
+
+    socket.emit('update_room', data);
+  });
 }
 
 function kickUser(userToKickId) {
@@ -195,13 +228,18 @@ function kickUser(userToKickId) {
   });
 }
 
+function deleteRoom() {
+  const user_id = window.localStorage.getItem("user_id");
+  const room_id = window.localStorage.getItem("room_id");
+
+  socket.emit('delete_room', { user_id, room_id });
+}
+
 function kicked() {
   alert("Você foi expulso da sala!");
   window.location.href = "/pages/select-room.html";
 }
 
 document.getElementById("logout").addEventListener("click", () => {
-  disconnectFromRoom();
-
   window.location.href = "./select-room.html";
 });

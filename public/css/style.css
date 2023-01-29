@@ -35,6 +35,10 @@ button {
   margin-left: 10px;
 }
 
+.delete-button {
+  background: #971a1a;
+}
+
 button:hover {
   opacity: 0.8;
 }
@@ -51,6 +55,16 @@ input {
 
 .shared-button {
   margin-top: 14px;
+}
+
+.form-popup {
+  flex-direction: column;
+  margin-top: 0px;
+  align-items: flex-end;
+}
+
+.button-update-room {
+  width: 240px;
 }
 
 .online-users {
