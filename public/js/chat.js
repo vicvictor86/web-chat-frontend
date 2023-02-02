@@ -7,7 +7,11 @@ if (!userId) {
   window.location.href = "/index.html";
 }
 
-const socket = io("http://localhost:3333");
+const socket = io("http://localhost:3333", {
+  auth: {
+    token: window.localStorage.getItem("token"),
+  }
+});
 
 const usernameDiv = document.getElementById("username");
 
