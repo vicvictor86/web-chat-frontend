@@ -64,11 +64,7 @@ socket.on('message', data => {
 });
 
 socket.on('app_error', data => {
-  alert(data.message);
-
-  if (data.code === 404) {
-    window.location.href = "/pages/select-room.html";
-  }
+  errorHandlers(data);
 })
 
 socket.on('kicked', data => {
@@ -99,6 +95,17 @@ function getPreviousMessages() {
       createMessage(message);
     });
   });
+}
+
+function errorHandlers(data) {
+  alert(data.message);
+  if (data.code === 404) {
+    window.location.href = "/pages/select-room.html";
+  }
+
+  if (data.message === "Room is full") {
+    window.location.href = "/pages/select-room.html";
+  }
 }
 
 function roomLinkToClipboard() {
